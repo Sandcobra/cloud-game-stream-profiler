@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/preview_banner.png" alt="Cloud Game Stream Profiler Banner" />
+</p>
+
 # 🎮 Cloud Game Stream Profiler
 
 A real-time observability dashboard for cloud gaming performance — built to mimic infrastructure challenges at Netflix Gaming.
