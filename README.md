@@ -8,6 +8,19 @@ A real-time observability dashboard for cloud gaming performance — built to mi
 
 ![Dashboard Screenshot](webui/static/dashboard-screenshot.png)
 
+### 🧩 System Architecture
+
+This diagram illustrates how the simulator, profiler, and dashboard components interact in real time.
+
+![Architecture Diagram](assets/architecture_diagram.png)
+
+### 🎮 Live Profiler Demo
+
+Watch the simulator generate FPS, Latency, and Bitrate metrics in real time, streamed to the cloud-based dashboard.
+
+![Live Demo](assets/simulator_demo.gif)
+
+
 ## 🚀 Features
 
 - 📊 Real-time FPS / latency / bitrate monitoring
