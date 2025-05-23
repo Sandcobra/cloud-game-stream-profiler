@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game Stream Profiler</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h2>📊 Cloud Game Stream Metrics</h2>
+
+  <label for="session">Select Session ID:</label>
+  <select id="session" onchange="setSession()"></select>
+
+  <canvas id="fpsChart" width="600" height="200"></canvas>
+  <canvas id="latencyChart" width="600" height="200"></canvas>
+  <canvas id="bitrateChart" width="600" height="200"></canvas>
+
+  <!-- Clean, scrollable alert table -->
+  <div id="alerts" style="max-height: 200px; overflow-y: auto; margin-top: 20px;">
+    <table style="width: 100%; border-collapse: collapse;" id="alerts-table">
+      <thead>
+        <tr style="background-color: #f0f0f0;">
+          <th style="padding: 6px; border: 1px solid #ddd;">Metric</th>
+          <th style="padding: 6px; border: 1px solid #ddd;">Issue</th>
+          <th style="padding: 6px; border: 1px solid #ddd;">Value</th>
+        </tr>
+      </thead>
+      <tbody id="alerts-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let currentSession = "";
+
+    async function populateSessionDropdown() {
+      try {
+        const res = await fetch("/sessions");
+        const sessions = await res.json();
+        const dropdown = document.getElementById("session");
+        dropdown.innerHTML = "";
+
+        sessions.forEach(s => {
+          const option = document.createElement("option");
+          option.text = s;
+          option.value = s;
+          dropdown.add(option);
+        });
+
+        if (sessions.length > 0) {
+          currentSession = sessions[sessions.length - 1];
+          dropdown.value = currentSession;
+          console.log("✅ Auto-selected session:", currentSession);
+        }
+      } catch (err) {
+        console.error("❌ Failed to populate sessions:", err);
+      }
+    }
+
+    function setSession() {
+      currentSession = document.getElementById("session").value;
+    }
+
+    async function fetchDataAndUpdateCharts() {
+
+      if (!currentSession) return;
+      try {
+        const res = await fetch('/metrics?session=' + currentSession);
+        const data = await res.json();
+
+        const timestamps = data.map(m => new Date(m.timestamp).toLocaleTimeString());
+        const fps = data.map(m => m.fps);
+        const latency = data.map(m => m.latency_ms);
+        const bitrate = data.map(m => m.bitrate_kbps);
+
+        fpsChart.data.labels = timestamps;
+        fpsChart.data.datasets[0].data = fps;
+
+        latencyChart.data.labels = timestamps;
+        latencyChart.data.datasets[0].data = latency;
+
+        bitrateChart.data.labels = timestamps;
+        bitrateChart.data.datasets[0].data = bitrate;
+
+        fpsChart.update();
+        latencyChart.update();
+        bitrateChart.update();
+
+        // Render alerts in table format
+        const alertBody = document.getElementById("alerts-body");
+        alertBody.innerHTML = "";
+
+        data.forEach(m => {
+          if (m.latency_ms > 100) {
+            alertBody.innerHTML += `
+              <tr style="background-color: #ffe6e6;">
+                <td style="padding: 6px; border: 1px solid #ddd;">Latency</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">High Latency ⚠️</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${m.latency_ms.toFixed(1)} ms</td>
+              </tr>`;
+          }
+          if (m.fps < 45) {
+            alertBody.innerHTML += `
+              <tr style="background-color: #fff3cd;">
+                <td style="padding: 6px; border: 1px solid #ddd;">FPS</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">Low FPS ⚠️</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${m.fps.toFixed(1)}</td>
+              </tr>`;
+          }
+          if (m.bitrate_kbps < 2000) {
+            alertBody.innerHTML += `
+              <tr style="background-color: #e6f7ff;">
+                <td style="padding: 6px; border: 1px solid #ddd;">Bitrate</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">Low Bitrate ⚠️</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${m.bitrate_kbps.toFixed(1)} kbps</td>
+              </tr>`;
+          }
+        });
+      } catch (err) {
+        console.error("Failed to load metrics", err);
+      }
+    }
+
+    function createChart(ctxId, label, borderColor, backgroundColor) {
+      return new Chart(document.getElementById(ctxId), {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label,
+            data: [],
+            fill: true,
+            borderColor: borderColor,
+            backgroundColor: backgroundColor,
+            tension: 0.3,
+            pointRadius: 2
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    const fpsChart = createChart("fpsChart", "FPS", "#007bff", "rgba(0, 123, 255, 0.2)");
+    const latencyChart = createChart("latencyChart", "Latency (ms)", "#28a745", "rgba(40, 167, 69, 0.2)");
+    const bitrateChart = createChart("bitrateChart", "Bitrate (kbps)", "#fd7e14", "rgba(253, 126, 20, 0.2)");
+
+    populateSessionDropdown();
+    setInterval(fetchDataAndUpdateCharts, 2000);
+  </script>
+</body>
+</html>
+
+
+
+

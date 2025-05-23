@@ -1,0 +1,14 @@
+services:
+  profiler:
+    build:
+      context: .
+      target: builder
+    ports:
+      - "8080:8080"
+    command: ./profilerd
+
+  simulator:
+    build:
+      context: .
+      target: builder
+    command: ./simulator

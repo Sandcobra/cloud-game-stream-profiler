@@ -1,0 +1,12 @@
+# .dockerignore
+.git
+data
+webui/static/metrics.json
+*.log
+*.exe
+*.zip
+*.tar
+*.bin
+.vscode
+__pycache__
+.env

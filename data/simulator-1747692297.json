@@ -1,0 +1,10 @@
+{"session_id":"simulator-1747692297","fps":61.44605049632749,"latency_ms":46.645696990389695,"bitrate_kbps":3156.0864791539357,"outliers":["latency"]}
+{"session_id":"simulator-1747692297","fps":57.14345865797912,"latency_ms":44.471328200794105,"bitrate_kbps":3282.7369449766375}
+{"session_id":"simulator-1747692297","fps":60.28464363490559,"latency_ms":43.82455817733166,"bitrate_kbps":2565.4352464262165,"outliers":["bitrate"]}
+{"session_id":"simulator-1747692297","fps":60.254035615781696,"latency_ms":44.28792043184796,"bitrate_kbps":3386.4562757464364}
+{"session_id":"simulator-1747692297","fps":63.01592789950742,"latency_ms":30.510526253785066,"bitrate_kbps":3435.1901654076833}
+{"session_id":"simulator-1747692297","fps":59.24144540683118,"latency_ms":45.32104953926726,"bitrate_kbps":2761.6439284146304,"outliers":["latency","bitrate"]}
+{"session_id":"simulator-1747692297","fps":64.28778239171373,"latency_ms":49.073329250681475,"bitrate_kbps":2832.5851376358632,"outliers":["latency","bitrate"]}
+{"session_id":"simulator-1747692297","fps":58.885161018871955,"latency_ms":39.53581580206373,"bitrate_kbps":2803.6303980248467,"outliers":["bitrate"]}
+{"session_id":"simulator-1747692297","fps":59.39514303954955,"latency_ms":34.33378118481211,"bitrate_kbps":2993.136127087052,"outliers":["bitrate"]}
+{"session_id":"simulator-1747692297","fps":58.263696328375296,"latency_ms":48.73759830127641,"bitrate_kbps":3136.3150412543637,"outliers":["latency"]}
